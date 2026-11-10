@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer - AI-Powered Candidate Evaluation</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary sticky-top shadow">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold fs-4" href="#">
+                <i class="bi bi-file-earmark-text-fill me-2"></i>
+                Resume Analyzer
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#upload-section">
+                            <i class="bi bi-cloud-upload me-1"></i> Upload
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#evaluations-section">
+                            <i class="bi bi-table me-1"></i> Results
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-white text-center py-5">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <h1 class="display-4 fw-bold mb-4">
+                        <i class="bi bi-stars text-warning me-2"></i>
+                        AI-Powered Resume Analysis
+                    </h1>
+                    <p class="lead mb-5 fs-5">
+                        Evaluate candidate resumes against RFR requirements with advanced AI technology
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap mb-3">
+                        <div class="feature-badge">
+                            <i class="bi bi-lightning-charge-fill text-warning"></i>
+                            Fast Processing
+                        </div>
+                        <div class="feature-badge">
+                            <i class="bi bi-graph-up text-success"></i>
+                            Accurate Scoring
+                        </div>
+                        <div class="feature-badge">
+                            <i class="bi bi-shield-check text-info"></i>
+                            AI Powered
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Section -->
+    <section id="upload-section" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-body p-0">
+                            <!-- Tabs -->
+                            <ul class="nav nav-pills nav-fill custom-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="single-tab-btn" data-bs-toggle="pill"
+                                            data-bs-target="#single-tab" type="button" role="tab">
+                                        <i class="bi bi-file-person me-2"></i>
+                                        1 RFR + 1 Resume
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="batch-tab-btn" data-bs-toggle="pill"
+                                            data-bs-target="#batch-tab" type="button" role="tab">
+                                        <i class="bi bi-folder-fill me-2"></i>
+                                        1 RFR + Multiple Resumes
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="multiple-rfrs-tab-btn" data-bs-toggle="pill"
+                                            data-bs-target="#multiple-rfrs-tab" type="button" role="tab">
+                                        <i class="bi bi-files me-2"></i>
+                                        Multiple RFRs + 1 Resume
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="bulk-tab-btn" data-bs-toggle="pill"
+                                            data-bs-target="#bulk-tab" type="button" role="tab">
+                                        <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+                                        Bulk Evaluation
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content p-4 p-md-5" id="myTabContent">
+                                <!-- Single Resume Tab -->
+                                <div class="tab-pane fade show active" id="single-tab" role="tabpanel">
+                                    <form id="single-form" enctype="multipart/form-data">
+                                        <div class="row g-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-clipboard-data text-primary me-2"></i>
+                                                    RFR Document (PDF)
+                                                </label>
+                                                <div class="upload-box">
+                                                    <input type="file" id="rfr-file" name="rfr"
+                                                           accept=".pdf" class="file-input" required>
+                                                    <div class="upload-content">
+                                                        <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                                        <p class="mb-1 fw-semibold">Drop RFR file here</p>
+                                                        <p class="text-muted small mb-0">or click to browse</p>
+                                                        <span class="file-name mt-2" id="rfr-file-name"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-person-badge text-success me-2"></i>
+                                                    Resume (PDF)
+                                                </label>
+                                                <div class="upload-box">
+                                                    <input type="file" id="resume-file" name="resume"
+                                                           accept=".pdf" class="file-input" required>
+                                                    <div class="upload-content">
+                                                        <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                                        <p class="mb-1 fw-semibold">Drop resume file here</p>
+                                                        <p class="text-muted small mb-0">or click to browse</p>
+                                                        <span class="file-name mt-2" id="resume-file-name"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">
+                                                <span class="btn-text">
+                                                    <i class="bi bi-cpu me-2"></i>
+                                                    Evaluate Resume
+                                                </span>
+                                                <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                      role="status" id="single-loader"></span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Batch Process Tab -->
+                                <div class="tab-pane fade" id="batch-tab" role="tabpanel">
+                                    <form id="batch-form">
+                                        <div class="row g-4">
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-clipboard-data text-primary me-2"></i>
+                                                    RFR Document Path
+                                                </label>
+                                                <div class="input-group input-group-lg">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-folder"></i>
+                                                    </span>
+                                                    <input type="text" id="rfr-path" name="rfrPath"
+                                                           class="form-control"
+                                                           placeholder="/path/to/rfr.pdf" required>
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                            onclick="browseFile('rfr-path')">
+                                                        <i class="bi bi-search me-1"></i> Browse
+                                                    </button>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Enter the full path to your RFR PDF file
+                                                </small>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-folder-fill text-warning me-2"></i>
+                                                    Resumes Folder Path
+                                                </label>
+                                                <div class="input-group input-group-lg">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-folder2-open"></i>
+                                                    </span>
+                                                    <input type="text" id="resumes-folder-path" name="resumesFolderPath"
+                                                           class="form-control"
+                                                           placeholder="/path/to/resumes/folder" required>
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                            onclick="browseFolder('resumes-folder-path')">
+                                                        <i class="bi bi-search me-1"></i> Browse
+                                                    </button>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Enter the full path to the folder containing resume PDFs
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">
+                                                <span class="btn-text">
+                                                    <i class="bi bi-folder-check me-2"></i>
+                                                    Process All Resumes
+                                                </span>
+                                                <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                      role="status" id="batch-loader"></span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Multiple RFRs + 1 Resume Tab -->
+                                <div class="tab-pane fade" id="multiple-rfrs-tab" role="tabpanel">
+                                    <form id="multiple-rfrs-form" enctype="multipart/form-data">
+                                        <div class="row g-4">
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-files text-primary me-2"></i>
+                                                    RFRs Folder Path
+                                                </label>
+                                                <div class="input-group input-group-lg">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-folder2-open"></i>
+                                                    </span>
+                                                    <input type="text" id="rfrs-folder-path" name="rfrsFolderPath"
+                                                           class="form-control"
+                                                           placeholder="/path/to/rfrs/folder" required>
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                            onclick="browseFolder('rfrs-folder-path')">
+                                                        <i class="bi bi-search me-1"></i> Browse
+                                                    </button>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Enter the full path to the folder containing multiple RFR PDFs
+                                                </small>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-person-badge text-success me-2"></i>
+                                                    Resume (PDF)
+                                                </label>
+                                                <div class="upload-box">
+                                                    <input type="file" id="multiple-rfrs-resume-file" name="resume"
+                                                           accept=".pdf" class="file-input" required>
+                                                    <div class="upload-content">
+                                                        <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                                        <p class="mb-1 fw-semibold">Drop resume file here</p>
+                                                        <p class="text-muted small mb-0">or click to browse</p>
+                                                        <span class="file-name mt-2" id="multiple-rfrs-resume-name"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">
+                                                <span class="btn-text">
+                                                    <i class="bi bi-files me-2"></i>
+                                                    Evaluate Against All RFRs
+                                                </span>
+                                                <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                      role="status" id="multiple-rfrs-loader"></span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Bulk Evaluation Tab -->
+                                <div class="tab-pane fade" id="bulk-tab" role="tabpanel">
+                                    <form id="bulk-form">
+                                        <div class="alert alert-info border-0 shadow-sm mb-4" role="alert">
+                                            <i class="bi bi-info-circle-fill me-2"></i>
+                                            <strong>Bulk Evaluation:</strong> This will evaluate all combinations of RFRs and Resumes.
+                                            For example, 3 RFRs × 5 Resumes = 15 evaluations.
+                                        </div>
+
+                                        <div class="row g-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-files text-primary me-2"></i>
+                                                    RFRs Folder Path
+                                                </label>
+                                                <div class="input-group input-group-lg">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-folder2-open"></i>
+                                                    </span>
+                                                    <input type="text" id="bulk-rfrs-folder-path" name="rfrsFolderPath"
+                                                           class="form-control"
+                                                           placeholder="/path/to/rfrs/folder" required>
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                            onclick="browseFolder('bulk-rfrs-folder-path')">
+                                                        <i class="bi bi-search me-1"></i> Browse
+                                                    </button>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Folder containing all RFR PDF files
+                                                </small>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="bi bi-folder-fill text-warning me-2"></i>
+                                                    Resumes Folder Path
+                                                </label>
+                                                <div class="input-group input-group-lg">
+                                                    <span class="input-group-text bg-light">
+                                                        <i class="bi bi-folder2-open"></i>
+                                                    </span>
+                                                    <input type="text" id="bulk-resumes-folder-path" name="resumesFolderPath"
+                                                           class="form-control"
+                                                           placeholder="/path/to/resumes/folder" required>
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                            onclick="browseFolder('bulk-resumes-folder-path')">
+                                                        <i class="bi bi-search me-1"></i> Browse
+                                                    </button>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    <i class="bi bi-info-circle me-1"></i>
+                                                    Folder containing all resume PDF files
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">
+                                                <span class="btn-text">
+                                                    <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+                                                    Start Bulk Evaluation
+                                                </span>
+                                                <span class="spinner-border spinner-border-sm ms-2 d-none"
+                                                      role="status" id="bulk-loader"></span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div id="error-section" class="alert alert-danger alert-dismissible fade d-none mt-4" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span id="error-text"></span>
+                        <button type="button" class="btn-close" onclick="hideError()"></button>
+                    </div>
+
+                    <!-- Success Alert -->
+                    <div id="success-section" class="alert alert-success alert-dismissible fade d-none mt-4" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <span id="success-text"></span>
+                        <button type="button" class="btn-close" onclick="hideSuccess()"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay d-none">
+        <div class="loading-content">
+            <div class="spinner-border text-primary mb-3" style="width: 4rem; height: 4rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h4 id="loading-message" class="text-white fw-bold mb-2">Processing...</h4>
+            <p id="loading-submessage" class="text-white-50 mb-0">Please wait while we analyze your documents</p>
+        </div>
+    </div>
+
+    <!-- Upload Progress Modal -->
+    <div id="upload-modal" class="custom-modal d-none">
+        <div class="modal-content-custom">
+            <div class="modal-body-custom">
+                <div id="upload-spinner" class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <i id="upload-success-icon" class="bi bi-check-circle-fill text-success d-none" style="font-size: 3rem;"></i>
+                <h5 class="fw-bold text-dark mb-2" id="upload-modal-title">Document Uploading</h5>
+                <p class="text-muted mb-0" id="upload-modal-message">Please wait while the document is being uploaded...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Duplicate Evaluation Modal -->
+    <div id="duplicate-modal" class="custom-modal d-none">
+        <div class="modal-content-custom alert-modal">
+            <div class="modal-header-custom">
+                <h5 class="modal-title-custom">
+                    <i class="bi bi-database-fill-check text-success me-2"></i>
+                    Evaluation Already Completed
+                </h5>
+                <button type="button" class="btn-close-custom" onclick="closeDuplicateModal()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body-custom">
+                <div class="alert alert-success mb-3 d-flex align-items-center" role="alert">
+                    <i class="bi bi-check-circle-fill me-3 fs-4"></i>
+                    <div>
+                        <strong>Good News!</strong> This evaluation has already been processed and the results are ready to view.
+                    </div>
+                </div>
+                <p class="text-muted mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    We found an existing evaluation for this exact combination of documents. There's no need to re-evaluate.
+                </p>
+                <div class="document-info">
+                    <div class="document-item">
+                        <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                        <strong>RFR Document:</strong> <span id="duplicate-rfr-name" class="text-dark">-</span>
+                    </div>
+                    <div class="document-item">
+                        <i class="bi bi-person-badge text-success me-2"></i>
+                        <strong>Resume:</strong> <span id="duplicate-resume-name" class="text-dark">-</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer-custom">
+                <button type="button" class="btn btn-success btn-lg shadow-sm" onclick="closeDuplicateModal()">
+                    <i class="bi bi-eye me-2"></i> View Results Below
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evaluations Table Section -->
+    <section id="evaluations-section" class="py-5 bg-light">
+        <div class="container-fluid px-3 px-md-5">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold text-dark mb-3">
+                    <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+                    Evaluation Results
+                </h2>
+                <p class="text-muted lead">Comprehensive analysis of all evaluated candidates</p>
+            </div>
+
+            <div id="evaluations-content" class="evaluation-results-container">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-0">
+                <i class="bi bi-robot me-2"></i>
+                Powered by AI | Resume Analyzer &copy; 2024
+            </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>
